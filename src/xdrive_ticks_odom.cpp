@@ -34,12 +34,9 @@ float reduction_ratio;
 double d_diam;
 bool first_tick_try_flag;
 bool valid_first_tick_flag; ///
-int left_ticks_prev, right_ticks_prev;
+double left_ticks_prev, right_ticks_prev;
 // bool swap_tickLR_flag;
-int tmp_tickleft, tmp_tickright;
-
-int right_wheel_speed;
-int left_wheel_speed;
+double tmp_tickleft, tmp_tickright;
 
 float var_Vlin, var_Vang;
 
@@ -52,8 +49,8 @@ robbase_msg::WheelSpeed wheelspeed_msg;
 double self_x=0;
 double self_y=0;
 double self_th=0;
-int left_ticks, right_ticks;
-int delta_left_ticks, delta_right_ticks;
+double left_ticks, right_ticks;
+double delta_left_ticks, delta_right_ticks;
 double elapsed_dt;
 
 typedef struct{
@@ -64,7 +61,7 @@ typedef struct{
 } tick_vec_struct;
 tick_vec_struct tick_vec;
 
-float lwheelmotor, rwheelmotor;
+double lwheelmotor, rwheelmotor;
 ros::Publisher cmd_vel_pub;
 
 using namespace std;
@@ -207,12 +204,12 @@ int main(int argc, char** argv)
         tick_vec.tick_rf = xdriver_getValue("tickrf") * rwheeltick_positive_factor;
 
         if (swap_tickLR_flag == true) {
-          tmp_tickleft = tick_vec.tick_rb;
-          tmp_tickright = tick_vec.tick_lb;
+          tmp_tickleft = (tick_vec.tick_rb + tick_vec.tick_rf) *0.5;
+          tmp_tickright = (tick_vec.tick_lb + tick_vec.tick_lf) *0.5;
         } else{
-          tmp_tickleft = tick_vec.tick_lb;
-          tmp_tickright = tick_vec.tick_rb;
-        }  
+          tmp_tickleft = (tick_vec.tick_lb + tick_vec.tick_lf) *0.5;;
+          tmp_tickright = (tick_vec.tick_rb + tick_vec.tick_rf) *0.5;
+        } 
         if (first_tick_try_flag == true) {
           first_tick_try_flag = false;
           left_ticks_prev = tmp_tickleft;
