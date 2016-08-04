@@ -198,10 +198,12 @@ int main(int argc, char** argv)
         xdriver_setValue_float("Vlin", var_Vlin);
         xdriver_setValue_float("Vang", var_Vang);
 
-        tick_vec.tick_lb = xdriver_getValue("ticklb") * rwheeltick_positive_factor * (-1);
-        tick_vec.tick_lf  = xdriver_getValue("ticklf") * rwheeltick_positive_factor * (-1);
-        tick_vec.tick_rb =  xdriver_getValue("tickrb") * rwheeltick_positive_factor;
-        tick_vec.tick_rf = xdriver_getValue("tickrf") * rwheeltick_positive_factor;
+        tick_vec.tick_lf  = xdriver_getValue("ticklf") * (-1);
+        tick_vec.tick_lb = xdriver_getValue("ticklb") * (-1);
+        tick_vec.tick_rb =  xdriver_getValue("tickrb");
+        tick_vec.tick_rf = xdriver_getValue("tickrf");
+        // tick_vec.tick_lb = xdriver_getValue("ticklb") * rwheeltick_positive_factor * (-1);
+        // tick_vec.tick_rf = xdriver_getValue("tickrf") * rwheeltick_positive_factor;
 
         if (swap_tickLR_flag == true) {
           tmp_tickleft = (tick_vec.tick_rb + tick_vec.tick_rf) *0.5;
