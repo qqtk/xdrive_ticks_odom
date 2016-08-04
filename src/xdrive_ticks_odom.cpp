@@ -34,7 +34,9 @@ float reduction_ratio;
 double d_diam;
 bool first_tick_try_flag;
 bool valid_first_tick_flag; ///
-double left_ticks_prev, right_ticks_prev;
+int left_ticks_prev, right_ticks_prev;
+// bool swap_tickLR_flag;
+int tmp_tickleft, tmp_tickright;
 
 int right_wheel_speed;
 int left_wheel_speed;
@@ -50,8 +52,8 @@ robbase_msg::WheelSpeed wheelspeed_msg;
 double self_x=0;
 double self_y=0;
 double self_th=0;
-double left_ticks, right_ticks;
-double delta_left_ticks, delta_right_ticks;
+int left_ticks, right_ticks;
+int delta_left_ticks, delta_right_ticks;
 double elapsed_dt;
 
 typedef struct{
@@ -145,6 +147,12 @@ int main(int argc, char** argv)
         d_diam  = 0.262;
     }
 
+    bool swap_tickLR_flag;
+    if(!private_n->getParam("swap_tickLR", swap_tickLR_flag)) {
+        ROS_WARN("Not provided: swap_tickLR_. Default=false");
+        swap_tickLR_flag = false;
+    }
+
     bool rwheeltick_positive_;
     int rwheeltick_positive_factor =1;
     // flag: {rwheeltick_positive, lwheeltick_negative}, vice versa.
@@ -198,24 +206,36 @@ int main(int argc, char** argv)
         tick_vec.tick_rb =  xdriver_getValue("tickrb") * rwheeltick_positive_factor;
         tick_vec.tick_rf = xdriver_getValue("tickrf") * rwheeltick_positive_factor;
 
+        if (swap_tickLR_flag == true) {
+          tmp_tickleft = tick_vec.tick_rb;
+          tmp_tickright = tick_vec.tick_lb;
+        } else{
+          tmp_tickleft = tick_vec.tick_lb;
+          tmp_tickright = tick_vec.tick_rb;
+        }  
         if (first_tick_try_flag == true) {
-          left_ticks_prev = tick_vec.tick_lb;
-          right_ticks_prev = tick_vec.tick_rb;
           first_tick_try_flag = false;
+          left_ticks_prev = tmp_tickleft;
+          right_ticks_prev = tmp_tickright;
+          // left_ticks_prev = tick_vec.tick_lb;
+          // right_ticks_prev = tick_vec.tick_rb;
           // valid_first_tick_flag = false;
-	    }
+	}
         // if (first_tick_try_flag == false && valid_first_tick_flag == false)
         //  valid_first_tick_flag = true;
 
         ticksMsg.header.stamp = ros::Time::now();
-        ticksMsg.ticks_l = tick_vec.tick_lb;
-        ticksMsg.ticks_r = tick_vec.tick_rb;
+        ticksMsg.ticks_l = tmp_tickleft;
+        ticksMsg.ticks_r = tmp_tickright;
+        // ticksMsg.ticks_r = tick_vec.tick_rb;
         // ticksMsg.ticks_r = int( (tick_vec.tick_rb + tick_vec.tick_rf) *0.5 );
 
         ticksLR_pub.publish(ticksMsg);
         // xdrive_motor();
-        left_ticks = tick_vec.tick_lb;
-        right_ticks = tick_vec.tick_rb;
+        left_ticks = tmp_tickleft;
+        right_ticks = tmp_tickright;
+        // left_ticks = tick_vec.tick_lb;
+        // right_ticks = tick_vec.tick_rb;
 
         current_time = ros::Time::now();
         delta_left_ticks = left_ticks - left_ticks_prev;
