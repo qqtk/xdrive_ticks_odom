@@ -22,7 +22,7 @@
 // #include "encoder_test/ticks.h"
 
 // #include "xdriver.h"
-#include "xdrive_ticks_cmd/xdriver.h"
+#include "xdrive_ticks_odom/xdriver.h"
 
 ros::Time current_time, last_time;
 
