@@ -205,9 +205,9 @@ int main(int argc, char** argv)
 
         if (swap_tickLR_flag == true) {
           tmp_tickleft = (tick_vec.tick_rb + tick_vec.tick_rf) *0.5;
-          tmp_tickright = (tick_vec.tick_lb + tick_vec.tick_lf) *0.5;
+          tmp_tickright = (tick_vec.tick_lb + tick_vec.tick_lf) *0.5 * (-1);
         } else{
-          tmp_tickleft = (tick_vec.tick_lb + tick_vec.tick_lf) *0.5;;
+          tmp_tickleft = (tick_vec.tick_lb + tick_vec.tick_lf) *0.5 * (-1);
           tmp_tickright = (tick_vec.tick_rb + tick_vec.tick_rf) *0.5;
         } 
         if (first_tick_try_flag == true) {
