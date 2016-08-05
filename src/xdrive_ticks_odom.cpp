@@ -54,10 +54,10 @@ double delta_left_ticks, delta_right_ticks;
 double elapsed_dt;
 
 typedef struct{
-	int tick_rf;
 	int tick_lb;
 	int tick_lf;
 	int tick_rb;
+	int tick_rf;
 } tick_vec_struct;
 tick_vec_struct tick_vec;
 
@@ -198,12 +198,10 @@ int main(int argc, char** argv)
         xdriver_setValue_float("Vlin", var_Vlin);
         xdriver_setValue_float("Vang", var_Vang);
 
-        tick_vec.tick_lf  = xdriver_getValue("ticklf") * (-1);
-        tick_vec.tick_lb = xdriver_getValue("ticklb") * (-1);
-        tick_vec.tick_rb =  xdriver_getValue("tickrb");
-        tick_vec.tick_rf = xdriver_getValue("tickrf");
-        // tick_vec.tick_lb = xdriver_getValue("ticklb") * rwheeltick_positive_factor * (-1);
-        // tick_vec.tick_rf = xdriver_getValue("tickrf") * rwheeltick_positive_factor;
+        xdriver_get("tickA", &tick_vec, 16);
+        // tick_vec.tick_rb =  xdriver_getValue("tickrb");
+        // tick_vec.tick_lf = xdriver_getValue("ticklf") * rwheeltick_positive_factor * (-1);
+        // tick_vec.tick_rb = xdriver_getValue("tickrb") * rwheeltick_positive_factor;
 
         if (swap_tickLR_flag == true) {
           tmp_tickleft = (tick_vec.tick_rb + tick_vec.tick_rf) *0.5;
