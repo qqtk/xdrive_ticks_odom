@@ -269,11 +269,15 @@ int main(int argc, char** argv)
         odom_transform_msg.header.frame_id = "odom";
         odom_transform_msg.child_frame_id = "base_link";
         odom_transform_msg.header.stamp = current_time;
+
         odom_transform_msg.transform.translation.x = self_x;
         odom_transform_msg.transform.translation.y = self_y;
         odom_transform_msg.transform.translation.z = 0.0;
         odom_transform_msg.transform.rotation = odom_quat;
 
+        // publishing the odometry and the tf: odom/ base_link
+        odom_tf_broadcaster.sendTransform(odom_transform_msg);
+        
         // publish the /odom topic
         nav_msgs::Odometry odom;
         odom.header.stamp = current_time;
@@ -298,9 +302,6 @@ int main(int argc, char** argv)
         odom.twist.covariance = odom.pose.covariance;
 
         odom_pub.publish(odom);
-
-        // publishing the odometry and the tf: odom/ base_link
-        odom_tf_broadcaster.sendTransform(odom_transform_msg);
 
         last_time = current_time;
         right_ticks_prev = right_ticks;
