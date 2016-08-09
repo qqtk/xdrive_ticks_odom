@@ -268,7 +268,7 @@ int main(int argc, char** argv)
 
         // publish TransformStamped message for odom/base_link 'to topic /tf
         odom_transform_msg.header.frame_id = "odom";
-        odom_transform_msg.child_frame_id = "base_link";
+        odom_transform_msg.header.child_frame_id = "base_link"; // addded {header.}'y16m8d09noon'
         odom_transform_msg.header.stamp = current_time;
 
         odom_transform_msg.transform.translation.x = self_x;
