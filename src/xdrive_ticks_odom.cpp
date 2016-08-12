@@ -109,7 +109,12 @@ int main(int argc, char** argv)
     ros::NodeHandle nh;
     // ros::NodeHandle nh_private("~").
     private_n= new ros::NodeHandle("~");
-
+    
+    std::string odom_frame_id_;
+    if(!private_n->getParam("odom_frame", odom_frame_id_)) {
+        ROS_WARN("No odom_frame_id provided - default: odom");
+        odom_frame_id_ = "odom";
+    }
     // double base_width;
     if(!private_n->getParam("base_width", base_width)) {
         ROS_WARN("No base_width provided - default: 0.496m");
@@ -170,7 +175,7 @@ int main(int argc, char** argv)
   ros::Publisher ticksLR_pub = nh.advertise<robbase_msg::encoders>("/ticksLR", 20);
   // ros::Publisher ticksLR4_pub = nh.advertise<encoder_test::ticks>("/ticks", 20);
   //  ros::Publisher ticksMLR_pub = nh.advertise<robbase_msg::RazorImu>("/ticksMLR", 20);
-  ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>("/odom", 20);
+  ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>(odom_frame_id_, 20);
 
   // showing motor_speed:
   cmd_vel_pub  = nh.advertise<robbase_msg::WheelSpeed>("/wheelspeed", 10);
