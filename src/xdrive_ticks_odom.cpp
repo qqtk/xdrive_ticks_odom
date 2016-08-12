@@ -269,11 +269,10 @@ int main(int argc, char** argv)
  // We use a quaternion created from yaw
         geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(self_th);
         // odom_quat = tf::createQuaternionMsgFromRollPitchYaw(0,0,self_th);
-/*
 
         // publish TransformStamped message for odom/base_link 'to topic /tf
-        odom_transform_msg.header.frame_id = "odom";
-        odom_transform_msg.header.child_frame_id = "base_link"; // addded {header.}'y16m8d09noon'
+        odom_transform_msg.header.frame_id = odom_frame_id_; // "odom";
+        // odom_transform_msg.header.child_frame_id = "base_link"; // addded {header.}'y16m8d09noon'
         odom_transform_msg.header.stamp = current_time;
 
         odom_transform_msg.transform.translation.x = self_x;
@@ -283,16 +282,17 @@ int main(int argc, char** argv)
 
         // publishing the odometry and the tf: odom/ base_link
         odom_tf_broadcaster.sendTransform(odom_transform_msg);
-*/
+    /*
     odom_tf_broadcaster.sendTransform(
       tf::StampedTransform(
         tf::Transform( odom_quat, tf::Vector3(self_x, self_y, 0.0) ),
         current_time, "odom", "base_link")
     );
+    */
         // publish the /odom topic
         nav_msgs::Odometry odom;
         odom.header.stamp = current_time;
-        odom.header.frame_id = "odom";
+        odom.header.frame_id = odom_frame_id_; // "odom";
         //set the position
         odom.pose.pose.position.x = self_x;
         odom.pose.pose.position.y = self_y;
