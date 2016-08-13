@@ -26,7 +26,7 @@
 #include "xdrive_ticks_odom/xdriver.h"
 
 ros::Time current_time, last_time;
-geometry_msgs::PoseStamped pose_in, pose_out;
+geometry_msgs::PoseStamped pose_out;
 float cur_yaw_;
 
 #define M_PIpi 3.1415926
@@ -322,9 +322,8 @@ int main(int argc, char** argv)
         left_ticks_prev = left_ticks;
 
         // 
-        pose_in.header = odom.header;
-        pose_in.pose = odom.pose.pose;
-        tf_->transformPose(global_frame_id_, pose_in, pose_out);
+        pose_out.header = odom.header;
+        pose_out.pose = odom.pose.pose;
         pose_pub.publish(pose_out);
         // cur_yaw_ = tf::getYaw(pose_out.pose.orientation);
         // tf::quaternionTFToMsg( tf::createQuaternionFromYaw(yaw_), pose.pose.pose.orientation);
