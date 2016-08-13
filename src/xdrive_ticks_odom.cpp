@@ -190,7 +190,7 @@ int main(int argc, char** argv)
   //  cmd_vel_pub  = nh.advertise<robbase_msg::WheelSpeed>("/wheelspeed", 10);
 
   // struct qch.rwheelmotor
-
+  
   // ros::Duration dur_time;
   robbase_msg::encoders ticksMsg;
 
@@ -292,8 +292,7 @@ int main(int argc, char** argv)
         odom_tf_broadcaster.sendTransform(odom_transform_msg);
     /*
     odom_tf_broadcaster.sendTransform(
-      tf::StampedTransform(
-        tf::Transform( odom_quat, tf::Vector3(self_x, self_y, 0.0) ),
+      tf::StampedTransform( tf::Transform( odom_quat, tf::Vector3(self_x, self_y, 0.0) ),
         current_time, "odom", "base_link")
     );
     */
