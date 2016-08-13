@@ -26,6 +26,8 @@
 #include "xdrive_ticks_odom/xdriver.h"
 
 ros::Time current_time, last_time;
+geometry_msgs::PoseStamped pose_in, pose_out;
+float cur_yaw_;
 
 #define M_PIpi 3.1415926
 double base_width, ticks_per_meter;
@@ -176,6 +178,7 @@ int main(int argc, char** argv)
   // ros::Publisher ticksLR4_pub = nh.advertise<encoder_test::ticks>("/ticks", 20);
   //  ros::Publisher ticksMLR_pub = nh.advertise<robbase_msg::RazorImu>("/ticksMLR", 20);
   ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>(odom_frame_id_, 20);
+  ros::Publisher pose_pub  = nh.advertise<geometry_msgs::PoseStamped>("pose_out", 20);
 
   // showing motor_speed:
   cmd_vel_pub  = nh.advertise<robbase_msg::WheelSpeed>("/wheelspeed", 10);
@@ -317,6 +320,14 @@ int main(int argc, char** argv)
         last_time = current_time;
         right_ticks_prev = right_ticks;
         left_ticks_prev = left_ticks;
+
+        // 
+        pose_in.header = odom.header;
+        pose_in.pose = odom.pose.pose;
+        tf_->transformPose(global_frame_id_, pose_in, pose_out);
+        pose_pub.publish(pose_out);
+        // cur_yaw_ = tf::getYaw(pose_out.pose.orientation);
+        // tf::quaternionTFToMsg( tf::createQuaternionFromYaw(yaw_), pose.pose.pose.orientation);
 
         // if (first_tick_try_flag == false && valid_first_tick_flag == false)
         //  valid_first_tick_flag = true;
