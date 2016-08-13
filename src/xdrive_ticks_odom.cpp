@@ -114,8 +114,13 @@ int main(int argc, char** argv)
     
     std::string odom_frame_id_;
     if(!private_n->getParam("odom_frame", odom_frame_id_)) {
-        ROS_WARN("No odom_frame_id provided - default: odom");
+        ROS_WARN("No odom_frame_id provided - default: odom (odomRaw when hector)");
         odom_frame_id_ = "odom";
+    }
+    std::string child_frame_id_;
+    if(!private_n->getParam("child_frame", child_frame_id_)) {
+        ROS_WARN("No child_frame_id provided - default: base_link or map (wrt odomRaw)");
+        child_frame_id_ = "base_link";
     }
     // double base_width;
     if(!private_n->getParam("base_width", base_width)) {
@@ -275,7 +280,7 @@ int main(int argc, char** argv)
 
         // publish TransformStamped message for odom/base_link 'to topic /tf
         odom_transform_msg.header.frame_id = odom_frame_id_; // "odom";
-        odom_transform_msg.child_frame_id = "base_link"; // addded {header.}'y16m8d09noon'
+        odom_transform_msg.child_frame_id = child_frame_id_; // "base_link"; // addded {header.}'y16m8d09noon'
         odom_transform_msg.header.stamp = current_time;
 
         odom_transform_msg.transform.translation.x = self_x;
@@ -302,7 +307,7 @@ int main(int argc, char** argv)
         odom.pose.pose.position.z = 0.0;
         odom.pose.pose.orientation = odom_quat;
         //set the velocity
-        odom.child_frame_id = "base_link";
+        odom.child_frame_id = child_frame_id_; // "base_link";
         odom.twist.twist.linear.x = dx;
         odom.twist.twist.linear.y = 0;
         odom.twist.twist.angular.z = dr;
