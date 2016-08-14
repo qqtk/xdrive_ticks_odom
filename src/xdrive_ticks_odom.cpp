@@ -19,6 +19,7 @@
 
 #include "robbase_msg/encoders.h"
 #include "robbase_msg/WheelSpeed.h"
+#include "robbase_msg/tickfourwheels.h"
 // #include "xdrive_ticks_cmd/WheelSpeed.h"
 // #include "encoder_test/ticks.h"
 
