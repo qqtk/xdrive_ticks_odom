@@ -180,6 +180,7 @@ int main(int argc, char** argv)
 
   //  ros::Publisher ticksLR_pub = nh.advertise<robbase_msg::ticks>("/ticks", 20);
   ros::Publisher ticksLR_pub = nh.advertise<robbase_msg::encoders>("/ticksLR", 20);
+  ros::Publisher tickfourwheels_pub = nh.advertise<robbase_msg::tickfourwheels>("/tickfourwheels", 20);
   // ros::Publisher ticksLR4_pub = nh.advertise<encoder_test::ticks>("/ticks", 20);
   //  ros::Publisher ticksMLR_pub = nh.advertise<robbase_msg::RazorImu>("/ticksMLR", 20);
   ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>(odom_frame_id_, 20);
@@ -193,7 +194,8 @@ int main(int argc, char** argv)
   
   // ros::Duration dur_time;
   robbase_msg::encoders ticksMsg;
-
+  robbase_msg::tickfourwheels tickfourwheelsMsg;
+  
   tf::TransformBroadcaster odom_tf_broadcaster;
   geometry_msgs::TransformStamped odom_transform_msg;
   //  encoder_test::ticks ticksMsg;
@@ -239,8 +241,14 @@ int main(int argc, char** argv)
         ticksMsg.ticks_r = tmp_tickright;
         // ticksMsg.ticks_r = tick_vec.tick_rb;
         // ticksMsg.ticks_r = int( (tick_vec.tick_rb + tick_vec.tick_rf) *0.5 );
-
+        tickfourwheelsMsg.header.stamp = ticksMsg.header.stamp;
+        tickfourwheelsMsg.ticks_lb = tick_vec.tick_lb * (-1);
+        tickfourwheelsMsg.ticks_lf = tick_vec.tick_lf * (-1);
+        tickfourwheelsMsg.ticks_rb = tick_vec.tick_rb;
+        tickfourwheelsMsg.ticks_rf = tick_vec.tick_rf;
+        
         ticksLR_pub.publish(ticksMsg);
+        tickfourwheels_pub.publish(tickfourwheelsMsg);
         // xdrive_motor();
         left_ticks = tmp_tickleft;
         right_ticks = tmp_tickright;
